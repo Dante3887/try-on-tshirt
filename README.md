@@ -1,7 +1,7 @@
 Learning to develop website with threejs and mediapipe.
 
 Current Progress
-1. Success sending pose landmarks data to threejs scene
+1. Sending pose landmarks data to threejs scene
 2. T-Shirt model following center point of shoulder
 
 Objective
