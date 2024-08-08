@@ -132,11 +132,10 @@ function updateModel() {
     //console.log("x: " + rotations.x, "  y: " + rotations.y, +"  z: " + rotations.z);
     const rotations = calculateAngle(landmarks[11], landmarks[12]);
     const rotationX = getAngleY(cubeList[11].position, cubeList[23].position);
-    //const rotationY = getAngleY(cubeList[11].position, cubeList[12].position);
+    const rotationY = getAngleY(cubeList[11].position, cubeList[12].position);
     const rotationZ = getAngleZ(cubeList[23].position, cubeList[24].position);
-    const rotationY = getAngleBetweenVertices(cubeList[11].position, cubeList[12].position);
     rotY += 0.01;
-    tshirtModel.rotation.set(0, (rotationY.y / 360 * 6), 0);
+    tshirtModel.rotation.set(0, (rotationY.y * (2 * Math.PI)), 0);
 
     console.log("rotation Y: " + (rotationY * (2 * Math.PI)));
     console.log("---------------------------------------------------------")
