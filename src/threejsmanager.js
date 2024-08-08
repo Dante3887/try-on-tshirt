@@ -67,8 +67,8 @@ let landmarks;
 function animate() {
     requestAnimationFrame(animate);
     if (landmarks != null) {
-        //updateModel();
-        updateCubes();
+        //updateCubes();
+        updateModel();
     }
     renderer.render(scene, camera);
 }
@@ -123,10 +123,6 @@ function updateModel() {
 
     var shoulderDistance = calculateDistance(cubeList[11].position, cubeList[12].position);
 
-    //console.log("left shoulder pos: " + cubeList[11].position.x, cubeList[11].position.y, cubeList[11].position.z);
-    //console.log("right shoulder pos: " + cubeList[12].position.x, cubeList[12].position.y, cubeList[12].position.z);
-    const landmarkDist = calculateDistance(landmarks[11], landmarks[12]);
-    //console.log("landmark Dist: " + abDist);
     const tshirtScaleX = shoulderDistance * 2.5;
     const tshirtScaleY = shoulderDistance * 2.5;
     const tshirtScaleZ = shoulderDistance * 2.5;
