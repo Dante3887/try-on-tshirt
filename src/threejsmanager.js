@@ -135,7 +135,7 @@ function updateModel() {
     const rotationY = getAngleY(cubeList[11].position, cubeList[12].position);
     const rotationZ = getAngleZ(cubeList[23].position, cubeList[24].position);
     rotY += 0.01;
-    tshirtModel.rotation.set(0, (rotationY.y * (2 * Math.PI)), 0);
+    tshirtModel.rotation.set(0, (rotationY * (2 * Math.PI)), 0);
 
     console.log("rotation Y: " + (rotationY * (2 * Math.PI)));
     console.log("---------------------------------------------------------")
