@@ -33,7 +33,7 @@ var streamPlane = new THREE.Mesh(streamPlaneGeometry, streamMat);
 //Load T-Shirt Model
 const loader = new GLTFLoader();
 var tshirtModel;
-loader.load("../model/tshirt_new2.glb", function (gltf) {
+loader.load("./try-on-tshirt/model/tshirt_new2.glb", function (gltf) {
     tshirtModel = gltf.scene;
     tshirtModel.material = new THREE.MeshBasicMaterial();
     scene.add(gltf.scene);
