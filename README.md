@@ -1,4 +1,5 @@
-Learning to develop website with threejs and mediapipe.
+Learning to develop website.
+This website is using threejs and mediapipe.
 
 Current Progress
 1. Sending pose landmarks data to threejs scene
