@@ -1,0 +1,23 @@
+{
+  "name": "virtual-try-on-web",
+  "version": "1.0.0",
+  "description": "a web for wearing virtual clothes",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.ts",
+    "build": "webpack --config webpack.config.js",
+    "dev": "webpack serve"
+  },
+  "author": "DanZix",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "three": "^0.167.0"
+  },
+  "devDependencies": {
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
+  }
+}
