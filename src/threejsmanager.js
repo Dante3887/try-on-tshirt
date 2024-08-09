@@ -33,6 +33,7 @@ var streamPlane = new THREE.Mesh(streamPlaneGeometry, streamMat);
 //Load T-Shirt Model
 const loader = new GLTFLoader();
 var tshirtModel;
+let initialShoulderDistance;
 loader.load("./model/tshirt_new2.glb", function (gltf) {
     tshirtModel = gltf.scene;
     tshirtModel.material = new THREE.MeshBasicMaterial();
@@ -110,34 +111,64 @@ function updateCubes() {
 }
 
 var rotY = 0;
+let initialCombinedMeasurement;
 function updateModel() {
     for (var i = 0; i < landmarks.length; i++) {
         //cubeList[i].position.set((-landmarks[i].x + 0.5) * aspectRatio / 2 * scaleX, (-landmarks[i].y + 0.5) * aspectRatio / 2 * scaleY, -landmarks[i].z)
         cubeList[i].position.set((-landmarks[i].x + 0.5) * scaleX, (-landmarks[i].y + 0.5) * scaleY, -landmarks[i].z)
     }
 
-    var centerX = (cubeList[11].position.x + cubeList[12].position.x) / 2;
-    var centerY = (cubeList[11].position.y + cubeList[12].position.y) / 2;
-    var centerZ = (cubeList[11].position.z + cubeList[12].position.z) / 2;
-    tshirtModel.position.set(centerX, centerY, centerZ);
+    var shoulderCenterX = (cubeList[11].position.x + cubeList[12].position.x) / 2;
+    var shoulderCenterY = (cubeList[11].position.y + cubeList[12].position.y) / 2;
+    var shoulderCenterZ = (cubeList[11].position.z + cubeList[12].position.z) / 2;
+    var shoulderCenterPoint = { x: shoulderCenterX, y: shoulderCenterY, z: shoulderCenterZ };
+    tshirtModel.position.set(shoulderCenterPoint.x, shoulderCenterPoint.y, shoulderCenterPoint.z);
 
+    var hipCenterX = (cubeList[23].position.x + cubeList[24].position.x) / 2;
+    var hipCenterY = (cubeList[23].position.y + cubeList[24].position.y) / 2;
+    var hipCenterZ = (cubeList[23].position.z + cubeList[24].position.z) / 2;
+    var hipCenterPoint = { x: hipCenterX, y: hipCenterY, z: hipCenterZ };
+
+    const torsoHeight = calculateDistance(hipCenterPoint, shoulderCenterPoint);
     var shoulderDistance = calculateDistance(cubeList[11].position, cubeList[12].position);
 
+    if (!initialCombinedMeasurement) {
+        initialCombinedMeasurement = Math.sqrt(shoulderDistance * torsoHeight);
+        //initialShoulderDistance = calculateDistance(cubeList[11].position, cubeList[12].position);
+    }
+
+    const combinedMeasurement = Math.sqrt(shoulderDistance * torsoHeight);
+
+    const tshirtScale = combinedMeasurement / initialCombinedMeasurement * 4.5;
     const tshirtScaleX = shoulderDistance * 2.5;
     const tshirtScaleY = shoulderDistance * 2.5;
     const tshirtScaleZ = shoulderDistance * 2.5;
-    tshirtModel.scale.set(tshirtScaleX, tshirtScaleY, tshirtScaleZ);
+    tshirtModel.scale.set(tshirtScale, tshirtScale, tshirtScale);
 
     //const rotations = getAngleBetweenVertices(landmarks[11], landmarks[12]);
     //console.log("x: " + rotations.x, "  y: " + rotations.y, +"  z: " + rotations.z);
     const rotations = calculateAngle(landmarks[11], landmarks[12]);
-    const rotationX = getAngleY(cubeList[11].position, cubeList[23].position);
-    const rotationY = getAngleY(cubeList[11].position, cubeList[12].position);
-    const rotationZ = getAngleZ(cubeList[23].position, cubeList[24].position);
+    //const rotationX = getAngleX(cubeList[11].position, cubeList[23].position);
+    var rotationY = getAngleY(cubeList[11].position, cubeList[12].position);
+    //const rotationZ = getAngleZ(cubeList[23].position, cubeList[24].position);
     rotY += 0.01;
-    tshirtModel.rotation.set(0, (rotationY * (2 * Math.PI)), 0);
 
-    console.log("rotation Y: " + (rotationY * (2 * Math.PI)));
+    const shoulderVector = new THREE.Vector3(
+        cubeList[12].position.x - cubeList[11].position.x,
+        cubeList[12].position.y - cubeList[11].position.y,
+        cubeList[12].position.z - cubeList[11].position.z
+    );
+
+    const rotation = new THREE.Quaternion().setFromUnitVectors(
+        new THREE.Vector3(1, 0, 0),
+        shoulderVector.normalize()
+    );
+
+    tshirtModel.quaternion.copy(rotation);
+    //tshirtModel.rotation.set(0, rotY, 0);
+
+    //console.log("rotations: " + rotations);
+    console.log(tshirtModel.rotation.y);
     console.log("---------------------------------------------------------")
 
 }
@@ -199,15 +230,7 @@ function getAngleY(point1, point2) {
     const dy = point2.y - point1.y;
     const dz = point2.z - point1.z;
 
-    return Math.atan2(dy, dx);
-}
-
-function getAngleZ(point1, point2) {
-    const dx = point2.x - point1.x;
-    const dy = point2.y - point1.y;
-    const dz = point2.z - point1.z;
-
-    return Math.atan2(dy, dx)
+    return Math.atan(dy / dx);
 }
 
 function calculateAngle(point1, point2) {
